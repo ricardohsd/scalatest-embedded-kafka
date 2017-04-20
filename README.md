@@ -201,3 +201,25 @@ class MySpec extends WordSpec with Matchers with EmbeddedKafkaStreamsAllInOne {
   }
 }
 ```
+
+### Configuration
+
+Also it's possible to add custom streaming configuration by providing an implicit `EmbeddedKafkaStreamsConfig`
+
+```scala
+class MySpec extends WordSpec with Matchers with EmbeddedKafkaStreamsAllInOne {
+
+"runs with custom timestamp extractor" should {
+    implicit val streamsConfig = EmbeddedKafkaStreamsConfig(
+      customStreamsProperties = Map(
+        StreamsConfig.TIMESTAMP_EXTRACTOR_CLASS_CONFIG -> classOf[CustomTimestampExtractor]
+      )
+    )
+
+    runStreamsWithStringConsumer(  ) {
+      // now all timestamps will be extracted by CustomTimestampExtractor
+    } { consumer =>
+      // ...
+    }
+}
+```
